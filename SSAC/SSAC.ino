@@ -324,7 +324,6 @@ void autoMode() {
 
   shaftRotator.setSpeed(10); // 스텝 모터 속도
 
-  upDown();
   runHeater();
   runCooler();
   runPlasmaModule();
@@ -391,6 +390,9 @@ void autoMode() {
       return;
     }
   }
+
+  upDown();
+
   Serial.println("Debug : AutoMode Finished");
 }
 
@@ -402,7 +404,6 @@ void fastMode() {
 
   shaftRotator.setSpeed(10); // 스텝 모터 속도
 
-  upDown();
   runHeater();
   runCooler();
   runPlasmaModule();
@@ -468,6 +469,8 @@ void fastMode() {
       return;
     }
   }
+
+  upDown();
   Serial.println("Debug : FastMode Finished");
 }
 
@@ -483,11 +486,11 @@ void deodorizeMode() {
   runPlasmaModule();
 
   // 0 -> -180도
-  for (int step = 0; step > -1296; step--) {
+  for (int step = 0; step >= -432; step--) {
     shaftRotator.step(-1);        // 축 회전용 모터를 1스텝씩 회전
     currentStep = step;           // 현재 스텝 변수에 할당
       
-    if (currentStep % 432 == 0 && (isDeoStopRequested)) {
+    if (currentStep % 108 == 0 && (isDeoStopRequested)) {
       Serial.println("Debug : Current Step : " + currentStep);
       return;
     }
@@ -498,11 +501,11 @@ void deodorizeMode() {
   }
 
   // -180 -> 0도
-  for (int step = -1296; step < 0; step++) {
+  for (int step = -432; step <= 0; step++) {
     shaftRotator.step(1);
     currentStep = step;
       
-    if (currentStep % 432 == 0 && (isDeoStopRequested)) {
+    if (currentStep % 108 == 0 && (isDeoStopRequested)) {
       Serial.println("Debug : Current Step : " + currentStep);
       return;
     }
@@ -512,16 +515,18 @@ void deodorizeMode() {
   stopPlasmaModule();
   runVentilator();
 
+  upDown();
+
   if (isDeoStopRequested) {
     return;
   }
 
   // 0 -> 180도
-  for (int step = 0; step < 1296; step++) {
+  for (int step = 0; step <= 432; step++) {
     shaftRotator.step(1);
     currentStep = step;
       
-    if (currentStep % 432 == 0 && (isDeoStopRequested)) {
+    if (currentStep % 108 == 0 && (isDeoStopRequested)) {
       Serial.println("Debug : Current Step : " + currentStep);
       return;
     }
@@ -530,34 +535,17 @@ void deodorizeMode() {
   stopVentilator();
 
   // 180 -> 0도
-  for (int step = 1296; step > 0; step--) {
+  for (int step = 432; step >= 0; step--) {
     shaftRotator.step(-1);
     currentStep = step;
       
-    if (currentStep % 432 == 0 && (isDeoStopRequested)) {
+    if (currentStep % 108 == 0 && (isDeoStopRequested)) {
       Serial.println("Debug : Current Step : " + currentStep);
       return;
     }
   }
 
-  // 축 회전 1회당 발판 상하 1회 이동
-  upDownMover1.setSpeed(10);
-  //upDownMover2.setSpeed(10);
-  //upDownMover3.setSpeed(10);
-
-  if (currentLevel == 0) {   // 현재 1단 발판 위치가 1단이라면
-    upDownMover1.step(-180); // 위치 바꾸기
-    //upDownMover2.setStep(-180);
-    //upDownMover3.setStep(-180);
-    currentLevel = 1;
-  } else {                     // 현재 1단 발판 위치가 2단이라면
-    upDownMover1.step(+180); // 위치 다시 바꾸기
-    //upDownMover2.setStep(+180);
-    //upDownMover3.setStep(+180);
-    currentLevel = 0;
-  }
-
-  delay(5000); // upDown이 완료되는 시간으로 수정 필요
+  upDown();
 
   // 디버깅용
   Serial.println("Debug : DeodorizeMode Finished");
@@ -574,11 +562,11 @@ void dryMode() {
   runHeater();
 
   // 0 -> -180도
-  for (int step = 0; step > -1296; step--) {
+  for (int step = 0; step >= -432; step--) {
     shaftRotator.step(-1);        // 축 회전용 모터를 1스텝씩 회전
     currentStep = step;           // 현재 스텝 변수에 할당
       
-    if (currentStep % 432 == 0 && (isDryStopRequested)) {
+    if (currentStep % 108 == 0 && (isDryStopRequested)) {
       Serial.println("Debug : Current Step : " + currentStep);
       return;
     }
@@ -589,26 +577,28 @@ void dryMode() {
   }
 
   // -180 -> 0도
-  for (int step = -1296; step < 0; step++) {
+  for (int step = -432; step <= 0; step++) {
     shaftRotator.step(1);
     currentStep = step;
       
-    if (currentStep % 432 == 0 && (isDryStopRequested)) {
+    if (currentStep % 108 == 0 && (isDryStopRequested)) {
       Serial.println("Debug : Current Step : " + currentStep);
       return;
     }
   }
+
+  upDown();
 
   if (isDeoStopRequested) {
     return;
   }
 
   // 0 -> 180도
-  for (int step = 0; step < 1296; step++) {
+  for (int step = 0; step <= 432; step++) {
     shaftRotator.step(1);
     currentStep = step;
       
-    if (currentStep % 432 == 0 && (isDryStopRequested)) {
+    if (currentStep % 108 == 0 && (isDryStopRequested)) {
       Serial.println("Debug : Current Step : " + currentStep);
       return;
     }
@@ -618,11 +608,11 @@ void dryMode() {
   runVentilator();
 
   // 180 -> 0도
-  for (int step = 1296; step > 0; step--) {
+  for (int step = 432; step >= 0; step--) {
     shaftRotator.step(-1);
     currentStep = step;
       
-    if (currentStep % 432 == 0 && (isDeoStopRequested)) {
+    if (currentStep % 108 == 0 && (isDeoStopRequested)) {
       Serial.println("Debug : Current Step : " + currentStep);
       return;
     }
@@ -630,31 +620,14 @@ void dryMode() {
 
   stopVentilator();
 
-  // 축 회전 1회당 발판 상하 1회 이동
-  upDownMover1.setSpeed(10);
-  //upDownMover2.setSpeed(10);
-  //upDownMover3.setSpeed(10);
-
-  if (currentLevel == 0) {   // 현재 1단 발판 위치가 1단이라면
-    upDownMover1.step(-180); // 위치 바꾸기
-    //upDownMover2.setStep(-180);
-    //upDownMover3.setStep(-180);
-    currentLevel = 1;
-  } else {                     // 현재 1단 발판 위치가 2단이라면
-    upDownMover1.step(+180); // 위치 다시 바꾸기
-    //upDownMover2.setStep(+180);
-    //upDownMover3.setStep(+180);
-    currentLevel = 0;
-  }
-
-  delay(5000); // upDown이 완료되는 시간으로 수정 필요
+  upDown();
 
   // 디버깅용
   Serial.println("Debug : DeoMode Finished");
 }
 
-// 신발 수납
-void shoesIn(int shoesNum) {
+// 신발 수납&추출
+void shoesInOut(int shoesNum) {
 
   /*
   신발 넘버 1 => 0     :  2단
@@ -675,41 +648,38 @@ void shoesIn(int shoesNum) {
       shoesStep = 0;
       elevateStep = 0;
     case 2:
-      shoesStep = -2*432;
+      shoesStep = -216;
       elevateStep = 0;
     case 3:
-      shoesStep = +2*432;
+      shoesStep = +216;
       elevateStep = 0;
     case 4:
-      shoesStep = -432;
+      shoesStep = -108;
       elevateStep = 1;
     case 5:
-      shoesStep = +432;
+      shoesStep = +108;
       elevateStep = 1;
     case 6:
-      shoesStep = -3*432;
+      shoesStep = -324;
       elevateStep = 1;
     default:
       break;
   }
 
-  int stepsToRotate = currentStep - shoesStep;
+  int stepsToRotate = shoesStep - currentStep;
 
   shaftRotator.step(-stepsToRotate);
 
+  currentStep = shoesStep;
+
   if (currentLevel == 0 && elevateStep == 1) {
   // 2단 1단 위치가 바뀌어야 하는 상황
-    upDownMover1.step(-100);
-    //upDownMover2.setStep(-100);
-    //upDownMover3.setStep(-100);
-
+    upDownMover1.step(-180);
     currentLevel = 1;
+
   } else if (currentLevel == 1 && elevateStep == 0) {
     // 2단 1단 위치가 바뀌어야 하는 상황
-    upDownMover1.step(100);
-    //upDownMover2.setStep(100);
-    //upDownMover3.setStep(100);
-
+    upDownMover1.step(180);
     currentLevel = 0;
   }
 
@@ -717,62 +687,6 @@ void shoesIn(int shoesNum) {
   Serial1.println("READY_TO_OPEN:0");
 }
 
-// 신발 추출
-void shoesOut(int shoesNum) {
-
-
-  int shoesStep = 0;
-  
-  int elevateStep = 0;
-
-  switch (shoesNum) {
-    case 1:
-      shoesStep = 0;
-      elevateStep = 0;
-    case 2:
-      shoesStep = -2*432;
-      elevateStep = 0;
-    case 3:
-      shoesStep = +2*432;
-      elevateStep = 0;
-    case 4:
-      shoesStep = -432;
-      elevateStep = 1;
-    case 5:
-      shoesStep = +432;
-      elevateStep = 1;
-    case 6:
-      shoesStep = -3*432;
-      elevateStep = 1;
-    default:
-      break;
-  }
-
-  int stepsToRotate = currentStep - shoesStep;
-
-  shaftRotator.step(-stepsToRotate);
-
-  if (currentLevel == 0 && elevateStep == 1) {
-  // 2단 1단 위치가 바뀌어야 하는 상황
-    upDownMover1.step(-180);
-    //upDownMover2.setStep(-180);
-    //upDownMover3.setStep(-180);
-    
-    currentLevel = 1;
-  } else if (currentLevel == 1 && elevateStep == 0) {
-  // 2단 1단 위치가 바뀌어야 하는 상황
-    upDownMover1.step(180);
-    //upDownMover2.setStep(180);
-    //upDownMover3.setStep(180);
-
-    currentLevel = 0;
-
-  }
-
-  Serial1.println("READY_TO_OPEN:0");
-
-
-}
 
 void btCommunication() {
   if (Serial1.available()) {
@@ -804,29 +718,29 @@ void btCommunication() {
     } else if (command.equals("DOOR:CLOSE")) {
       closeDoor();
     } else if (command.equals("SHOESIN:1")) {
-      shoesIn(1);
+      shoesInOut(1);
     } else if (command.equals("SHOESIN:2")) {
-      shoesIn(2);
+      shoesInOut(2);
     } else if (command.equals("SHOESIN:3")) {
-      shoesIn(3);
+      shoesInOut(3);
     } else if (command.equals("SHOESIN:4")) {
-      shoesIn(4);
+      shoesInOut(4);
     } else if (command.equals("SHOESIN:5")) {
-      shoesIn(5);
+      shoesInOut(5);
     } else if (command.equals("SHOESIN:6")) {
-      shoesIn(6);
+      shoesInOut(6);
     } else if (command.equals("SHOESOUT:1")) {
-      shoesOut(1);
+      shoesInOut(1);
     } else if (command.equals("SHOESOUT:2")) {
-      shoesOut(2);
+      shoesInOut(2);
     } else if (command.equals("SHOESOUT:3")) {
-      shoesOut(3);
+      shoesInOut(3);
     } else if (command.equals("SHOESOUT:4")) {
-      shoesOut(4);
+      shoesInOut(4);
     } else if (command.equals("SHOESOUT:5")) {
-      shoesOut(5);
+      shoesInOut(5);
     } else if (command.equals("SHOESOUT:6")) {
-      shoesOut(6);
+      shoesInOut(6);
     } 
   }
 }
