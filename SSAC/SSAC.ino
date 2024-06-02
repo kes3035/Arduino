@@ -252,7 +252,24 @@ void readDHT() {
 
     currentTemp = temp;
 
-    String data = "DHT:" + String(temp) + "," + "HUMID:" + String(humidity);
+    String data = "DHT:" + String(temp) + "," + String(humidity);
+    Serial1.println(data);
+
+    Serial.println(data);
+    lcd.setCursor(2, 0);
+    lcd.print("TEMP-" + String(temp) + "C");
+    lcd.setCursor(2, 1);
+    lcd.print("HUMID-" + String(round(humidity)) + "%");
+
+    delay(2000);
+    lcd.clear();
+}
+
+// 모드 작동 동안 내부의 온습도 표시하기
+void presentLCD() {
+    float temp = dht.readTemperature();  // 온도 읽기
+    float humidity = dht.readHumidity();  // 습도 읽기
+    currentTemp = temp;
 
     Serial.println(data);
     lcd.setCursor(2, 0);
@@ -260,6 +277,7 @@ void readDHT() {
     lcd.setCursor(2, 1);
     lcd.print("HUMID-" + String(round(humidity)) + "%");
 }
+
 
 // 문 열림 (실험으로 모터 속도와 시간 재설정 필요)
 void openDoor() {
