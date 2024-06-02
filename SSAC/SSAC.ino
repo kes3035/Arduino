@@ -19,8 +19,6 @@ int currentLevel = 0;
 
 bool didFinishedRotation = false;
 
-// 현재 온도를 저장하기 위한 변수
-float currentTemp = 0.0;
 
 // 정지 요청이 있는지 확인하는 변수
 bool isAutoStopRequested = false;
@@ -250,8 +248,6 @@ void readDHT() {
     float temp = dht.readTemperature();  // 온도 읽기
     float humidity = dht.readHumidity();  // 습도 읽기
 
-    currentTemp = temp;
-
     String data = "DHT:" + String(temp) + "," + String(humidity);
     Serial1.println(data);
 
@@ -269,7 +265,6 @@ void readDHT() {
 void presentLCD() {
     float temp = dht.readTemperature();  // 온도 읽기
     float humidity = dht.readHumidity();  // 습도 읽기
-    currentTemp = temp;
 
     Serial.println(data);
     lcd.setCursor(2, 0);
@@ -345,7 +340,7 @@ void autoMode() {
   runHeater();
   runCooler();
   runPlasmaModule();
-
+  presentLCD();
   // 0 -> -180도
   for (int step = 0; step >= -432; step--) {
     shaftRotator.step(-1);        // 축 회전용 모터를 1스텝씩 회전
@@ -411,6 +406,7 @@ void autoMode() {
 
   upDown();
 
+  lcd.clear();
   Serial.println("Debug : AutoMode Finished");
 }
 
@@ -426,6 +422,7 @@ void fastMode() {
   runCooler();
   runPlasmaModule();
 
+  presentLCD();
   // 0 -> -180도
   for (int step = 0; step >= -432; step--) {
     shaftRotator.step(-1);        // 축 회전용 모터를 1스텝씩 회전
@@ -489,6 +486,7 @@ void fastMode() {
   }
 
   upDown();
+  lcd.clear();
   Serial.println("Debug : FastMode Finished");
 }
 
@@ -502,7 +500,7 @@ void deodorizeMode() {
 
   runCooler();
   runPlasmaModule();
-
+  presentLCD();
   // 0 -> -180도
   for (int step = 0; step >= -432; step--) {
     shaftRotator.step(-1);        // 축 회전용 모터를 1스텝씩 회전
@@ -565,7 +563,7 @@ void deodorizeMode() {
 
   upDown();
 
-  // 디버깅용
+  lcd.clear();
   Serial.println("Debug : DeodorizeMode Finished");
 }
 
@@ -578,7 +576,7 @@ void dryMode() {
   shaftRotator.setSpeed(10); // 스텝 모터 속도
 
   runHeater();
-
+  presentLCD();
   // 0 -> -180도
   for (int step = 0; step >= -432; step--) {
     shaftRotator.step(-1);        // 축 회전용 모터를 1스텝씩 회전
@@ -640,7 +638,7 @@ void dryMode() {
 
   upDown();
 
-  // 디버깅용
+  lcd.clear();
   Serial.println("Debug : DeoMode Finished");
 }
 
