@@ -254,7 +254,7 @@ void readDHT() {
 
     String data = "DHT:" + String(temp) + "," + "HUMID:" + String(humidity);
 
-    Serial.print(data);
+    Serial.println(data);
     lcd.setCursor(2, 0);
     lcd.print("TEMP-" + String(temp) + "C");
     lcd.setCursor(2, 1);
@@ -749,4 +749,14 @@ void setup() {
   Serial.begin(9600);
   Serial1.begin(9600);
   dht.begin();
-  settin    ㅠㅕㅅBybytCommmiuiunication());
+  lcd.begin();
+  settingHeater();
+  settingCooler();
+  settingVentilator();
+  settingPlasmaModule();
+  settingMotor();
+}
+  
+void loop() {
+  btCommunication();
+}
