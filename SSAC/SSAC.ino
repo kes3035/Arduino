@@ -276,6 +276,9 @@ void presentLCD() {
 
 // 문 열림 (실험으로 모터 속도와 시간 재설정 필요)
 void openDoor() {
+  Serial.println("Debug ; UP")
+  delay(1000);
+
   analogWrite(ENA_DOOR, 80);
   Serial.println("Debug : UP");
   digitalWrite(IN1_DOOR, LOW);
@@ -287,6 +290,8 @@ void openDoor() {
   digitalWrite(IN1_DOOR, LOW);
   digitalWrite(IN2_DOOR, LOW);
 
+  delay(1000);
+
   Serial.println("Debug : Did Finished Open Door");
   Serial1.println("READY_TO_CLOSE:0");
 }
@@ -294,6 +299,8 @@ void openDoor() {
 // 문 닫힘
 void closeDoor() {
   Serial.println("Debug : DOWN");
+  delay(1000);
+
   analogWrite(ENA_DOOR, 40);
   digitalWrite(IN1_DOOR, HIGH);
   digitalWrite(IN2_DOOR, LOW);
@@ -303,6 +310,8 @@ void closeDoor() {
   analogWrite(ENA_DOOR, 0);
   digitalWrite(IN1_DOOR, LOW);
   digitalWrite(IN2_DOOR, LOW);
+
+  delay(1000);
 
   Serial.println("Debug : Did Finished Close Door");
   Serial1.println("CLOSE:0");
